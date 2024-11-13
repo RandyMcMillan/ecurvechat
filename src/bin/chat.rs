@@ -114,32 +114,36 @@ fn set(args: Vec<String>, state: &mut State) {
             if let Ok(server_addr) = value.as_str().parse::<Ipv4Addr>() {
                 state.server_addr = Some(server_addr)
             } else {
-                eprintln!("Bad value for server address: '{}'", value);
-                eprintln!("Server address should be an IPv4 address in the format x.x.x.x");
+                state.server_addr = Some(("127.0.0.1".parse::<Ipv4Addr>()).expect("REASON"))
+                //eprintln!("Bad value for server address: '{}'", value);
+                //eprintln!("Server address should be an IPv4 address in the format x.x.x.x");
             }
         }
         "port" => {
             if let Ok(server_port) = value.as_str().parse::<u16>() {
                 state.server_port = Some(server_port)
             } else {
-                eprintln!("Bad value for port: '{}'", value);
-                eprintln!("Port value should be an integer in the range 1-65536");
+                state.server_port = Some(6102 as u16)
+                //eprintln!("Bad value for port: '{}'", value);
+                //eprintln!("Port value should be an integer in the range 1-65536");
             }
         }
         "ttp_addr" => {
             if let Ok(ttp_addr) = value.as_str().parse::<Ipv4Addr>() {
                 state.ttp_addr = Some(ttp_addr)
             } else {
-                eprintln!("Bad value for server address: '{}'", value);
-                eprintln!("Server address should be an IPv4 address in the format x.x.x.x");
+                state.server_addr = Some(("0.0.0.0".parse::<Ipv4Addr>()).expect("REASON"))
+                //eprintln!("Bad value for server address: '{}'", value);
+                //eprintln!("Server address should be an IPv4 address in the format x.x.x.x");
             }
         }
         "ttp_port" => {
             if let Ok(ttp_port) = value.as_str().parse::<u16>() {
                 state.ttp_port = Some(ttp_port)
             } else {
-                eprintln!("Bad value for port: '{}'", value);
-                eprintln!("Port value should be an integer in the range 1-65536");
+                state.ttp_port = Some(8888 as u16)
+                //eprintln!("Bad value for port: '{}'", value);
+                //eprintln!("Port value should be an integer in the range 1-65536");
             }
         }
         "algo" => {
@@ -239,11 +243,11 @@ impl From<&State> for ChatArguments {
 
         ChatArguments {
             port: state.server_port.expect("No port"),
-            address: state.server_addr.unwrap().to_string(),
-            ttp_port: state.ttp_port.unwrap(),
-            ttp_address: state.ttp_addr.unwrap().to_string(),
-            name: state.name.unwrap(),
-            org: state.org.unwrap(),
+            address: state.server_addr.unwrap_or("0.0.0.0").to_string(),
+            ttp_port: state.ttp_port.unwrap_or(8888 as u16),
+            ttp_address: state.ttp_addr.unwrap_or("0.0.0.0").to_string(),
+            name: state.name.unwrap_or(String::from("gnostr-user")),
+            org: state.org.unwrap_or(String::from("chat.gnostr.org")),
         }
     }
 }
