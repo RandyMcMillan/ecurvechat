@@ -243,9 +243,10 @@ impl From<&State> for ChatArguments {
 
         ChatArguments {
             port: state.server_port.expect("No port"),
-            address: state.server_addr.unwrap_or("0.0.0.0").to_string(),
+            address: state.server_addr.unwrap_or("0.0.0.0".parse::<Ipv4Addr>().expect("REASON")).to_string(),
             ttp_port: state.ttp_port.unwrap_or(8888 as u16),
-            ttp_address: state.ttp_addr.unwrap_or("0.0.0.0").to_string(),
+            ttp_address: state.ttp_addr.unwrap_or("0.0.0.0".parse::<Ipv4Addr>().expect("REASON")).to_string(),
+
             name: state.name.unwrap_or(String::from("gnostr-user")),
             org: state.org.unwrap_or(String::from("chat.gnostr.org")),
         }
